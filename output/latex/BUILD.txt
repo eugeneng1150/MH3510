@@ -1,0 +1,34 @@
+MH3510 AADT report - LaTeX source package
+
+Files:
+  aadt_report.tex       Report source.
+  assets/              All figures used by the report.
+  analysis.R           Complete base-R analysis.
+  aadt.txt             Original dataset.
+  R_output.txt         Console output included in the report.
+  analysis_notes.txt   Detailed model record and lecture references.
+
+Compile from this directory:
+  tectonic aadt_report.tex
+
+Alternatively use a LaTeX installation with the standard packages listed in the
+preamble. Compile twice with pdflatex to resolve references.
+
+Personal details:
+  Replace the definitions of \AuthorName and \MatricNumber in aadt_report.tex.
+  Current details: Eugene Ng, N22602219H.
+
+Regenerate analysis results from this directory:
+  Rscript analysis.R
+
+Before recompiling after an analysis change, copy:
+  coursework_results/R_output.txt to R_output.txt
+  coursework_results/plots/*.png to assets/
+
+Narrative tables and equations in the report are written explicitly. If the
+data or model specification changes, review and update their values as well.
+
+The current report retains all 11 candidate models. The raw/log/square-root
+failures and fourth-root alternative are documented. Only base-R, course-level
+methods are needed to run the main analysis. Earlier extended exploration
+remains in the original project's archive/extended_analysis/ directory.
