@@ -1,0 +1,249 @@
+MH3510 AADT PROJECT: ANALYSIS DECISIONS AND LECTURE ALIGNMENT
+==========================================================
+
+Read this alongside analysis.R and coursework_results/R_output.txt.
+Run from the project directory with: Rscript analysis.R
+The script needs only base R. All 121 observations and all 11 candidate models
+are retained. These are analysis notes, not yet a formatted submission report.
+
+1. WHAT THE LECTURES SUPPORT
+
+The five stages follow the supplied regression tutorial: explore, fit, check,
+revise/simplify, and make inference/predictions.
+
+Relevant local references:
+- MH3510_Chapter2 (1).pdf, Part 4, printed slides 48-59 and 64:
+  residuals versus fitted values and predictors, normal Q-Q plots, transformation,
+  unusual observations, influence, and sensitivity analysis. Printed slide 58
+  is PDF page 59; it explicitly discusses transforming predictors and responses.
+- MH3510_Chapter4_Part1.pdf: least squares, individual t-tests, overall F-test,
+  R-squared, and inference for a multiple regression.
+- MH3510_CH4part2(ppt).pdf, PDF pages 12-25: extra sums of squares and the
+  reduced-versus-full F-test; pages 29-31: mean-response and individual prediction;
+  pages 35-36: polynomial regression and keeping lower-order terms.
+- Modeling linear regression model with R.pdf, Sections 2-7: the practical R
+  sequence, residual plots, F-tests, and predict(). The steam data are illustrative.
+
+Chapters 1 and 3 provide context and matrix foundations. Chapters 5 and 6 concern
+one-way/two-way ANOVA and do not require replacing this regression workflow.
+
+Changes after reviewing the slides:
+- The MAIN analysis now relies on lm(), summary(), residual/Q-Q plots, anova(),
+  confint(), predict(), and a simple influence sensitivity check.
+- Bootstrap intervals, repeated cross-validation, Box-Cox likelihood profiling,
+  custom variance tests, Shapiro tests, VIF calculations and HC3 calculations
+  are not required in the main coursework script. Although slide 52 mentions
+  robust standard errors as a possible remedy, implementing HC3 is unnecessary here.
+- The earlier extended script and outputs were preserved in
+  archive/extended_analysis/. The original results/ folder also remains intact.
+  Those earlier files are historical exploration, not the current coursework output.
+- No confidence region or Bonferroni limits are included.
+
+2. DATA AND THE INITIAL MODEL
+
+Use only the first five columns of aadt.txt. There are 121 complete observations.
+AADT ranges from 201 to 155547 vehicles/day. All responses and populations are
+positive, so logarithms and positive root transformations are defined.
+
+The original control code is 1 for access control and 2 for no access control.
+Define access=1 for original code 1, and access=0 for original code 2.
+There are 27 controlled-access and 94 uncontrolled-access road sections.
+
+The scatterplot matrix shows positive associations of traffic with population,
+lanes and access control. Width has a much weaker marginal relationship.
+Population and AADT are strongly skewed. Lanes and access control are associated:
+all two-lane sections lack access control, and sections above four lanes all have
+access control. Do not interpret their fitted coefficients as causal effects.
+
+Start with the required four predictors:
+  AADT = beta0 + beta1*population + beta2*lanes + beta3*width + beta4*access + error.
+
+M1 has R-squared 0.7527 and adjusted R-squared 0.7442. Its overall F-test is highly
+significant. Nevertheless, the residual plot shows curvature and increasing spread,
+the Q-Q plot has substantial tail departures, and 45 fitted AADT values are negative.
+This is a useful baseline, but it is not an adequate final model.
+
+3. COMPLETE RECORD OF WHAT WORKED AND WHAT DID NOT
+
+Every model below is printed in R_output.txt, saved in all_candidate_models.rds,
+and has its own residual figure in coursework_results/plots/.
+Model numbering preserves the exploratory record; it is not a ranking.
+
+M1_raw
+  Response: AADT. Predictors: population, lanes, width, access.
+  Purpose: required initial model.
+  Result: explains some variation but has curvature, strongly unequal residual
+  spread, tail problems and negative fitted values. Retained as the baseline.
+
+M2_log_y
+  Response: log(AADT). Predictors: population, lanes, width, access.
+  Purpose: compress high responses to reduce increasing variance.
+  Result: Q-Q plot improves substantially, but the residual-versus-fitted trend
+  curves and turns downward at large fitted values. Transforming y alone is insufficient.
+
+M3_log_y_log_population
+  Response: log(AADT). Predictors: log(population), lanes, width, access.
+  Purpose: allow a nonlinear relationship with population.
+  Result: improves the population specification, but residual curvature and
+  changing spread remain, with influential tail observations.
+
+M4_log_y_log_population_lanes
+  Response: log(AADT). Predictors: log(population), log(lanes), width, access.
+  Purpose: allow a diminishing relationship with lane count on the log-response scale.
+  Result: the mean trend is flatter, but residual spread decreases at larger fitted
+  values. It improves on earlier log models but does not fully resolve the variance issue.
+
+M5_log_y_quadratic_lanes
+  Response: log(AADT). Predictors: log(population), lanes, lanes^2, width, access.
+  Purpose: a polynomial alternative, explicitly covered in Chapter 4 Part II.
+  Result: adding lanes^2 to M3 helps (nested F-test p=0.00305), but decreasing
+  residual spread remains. Keep both lanes and lanes^2; a significant extra term
+  does not by itself make the entire model adequate.
+
+M6_log_y_reduced
+  Response: log(AADT). Predictors: log(population), log(lanes), access.
+  Purpose: test whether width adds useful information to M4.
+  Result: width deletion is defensible (F-test p=0.531), but the residual spread
+  problem persists. Simplification does not repair an unsuitable response transformation.
+
+M7_fourth_root_full
+  Response: AADT^0.25. Predictors: log(population), log(lanes), width, access.
+  Purpose: a positive power between log and square root; equivalently sqrt(sqrt(AADT)).
+  Result: substantially more stable residual spread and a much straighter Q-Q plot.
+  This is a reasonable candidate, not a failed model.
+
+M8_square_root_full
+  Response: sqrt(AADT). Predictors: log(population), log(lanes), width, access.
+  Purpose: try the standard square-root response transformation shown in the slides.
+  Result: compresses large observations, but noticeable curvature and an increasing
+  residual spread remain. It does not compress the high traffic values sufficiently.
+
+M9_fourth_root_reduced
+  Response: AADT^0.25. Predictors: log(population), log(lanes), access.
+  Purpose: simplify M7 after checking width.
+  Result: width is not supported (F-test p=0.397); residual checks remain reasonable.
+  This remains a valid alternative. Its back-transformed prediction is about 5728.
+
+M10_fifth_root_full
+  Response: AADT^0.2. Predictors: log(population), log(lanes), width, access.
+  Purpose: try a nearby power that compresses the response slightly more than a fourth root.
+  Result: a relatively flat residual trend, approximately stable spread, and a
+  reasonably straight Q-Q plot, with a few tail observations still needing discussion.
+
+M11_fifth_root_reduced -- SELECTED WORKING MODEL
+  Response: AADT^0.2. Predictors: log(population), log(lanes), access.
+  Purpose: simplify M10 without losing a supported predictor.
+  Result: the width F-test gives F(1,116)=0.6317, p=0.4284. At the 5% level there
+  is insufficient evidence that width improves the model given the other predictors.
+  Residuals versus the omitted width do not show an obvious remaining trend.
+  All retained predictor coefficients have small t-test p-values.
+
+4. WHY THIS MODEL WAS CHOSEN, AND WHAT THE CHOICE DOES NOT MEAN
+
+The main reasoning follows the lectures:
+1) The raw model has clear diagnostic defects; significance and R-squared alone
+   do not rescue it.
+2) Log response models improve the tails but leave curvature or uneven spread.
+   The square-root model leaves increasing spread. A power between these two
+   transformation strengths is a reasonable next trial.
+3) Both fourth-root and fifth-root models give substantially more satisfactory
+   residual checks. M11 is retained as a defensible working choice; its residual
+   smooth is close to horizontal. It is NOT proved uniquely best by these plots.
+4) The full/reduced F-test supports dropping width. An additional joint test of
+   squared log-population and squared log-lane terms gives p=0.481, so the simple
+   mean specification is retained. These are nested comparisons with the SAME response.
+5) Keep all observations, discuss the unusual cases, and report the sensitivity.
+
+Honest provenance: the earlier extended exploration used Box-Cox and cross-validation
+to investigate nearby powers. The Box-Cox maximum was near 0.18; a fifth root is a
+convenient nearby power. Those techniques are preserved in the archive but are not
+needed to run or explain the main lecture-level workflow. The slides do not prescribe
+the exact fifth-root transformation: it is an extension of their transformation idea,
+also permitted by the assignment. Do not claim it was specified in the syllabus or
+chosen before seeing the data. The fourth-root alternative is also defensible.
+
+Do not compare raw-model R-squared with fifth-root-model R-squared as if the response
+were unchanged. Do not run an F-test between models on different response scales.
+Do not say width has no real-world effect: the result concerns its additional linear
+contribution in this fitted model. Exploratory selection makes subsequent textbook
+intervals conditional on the chosen specification, not a guarantee about all possible models.
+
+5. FINAL FIT AND INTERPRETATION
+
+Let Z = AADT^(1/5). The fitted conditional mean of Z is
+  Z_hat = -2.739015 + 0.535189*log(population)
+                     + 2.317245*log(lanes) + 1.106497*access.
+All logarithms are natural logarithms.
+
+R-squared = 0.8528; adjusted R-squared = 0.8490, both on the fifth-root scale.
+Residual standard error = 0.7478, with 117 residual degrees of freedom.
+Overall F(3,117) is approximately 226.0, with p<2.2e-16.
+
+Holding the other fitted predictors fixed, doubling population changes fitted Z by
+0.535189*log(2), about 0.371. Doubling lane count changes fitted Z by
+2.317245*log(2), about 1.606. Access control is associated with a 1.1065 higher
+fitted Z at the same population and lane count. These are transformed-scale changes,
+not fixed increases in vehicles/day or direct percentage changes in AADT.
+The intercept is not useful as a physical prediction outside the observed settings.
+
+Residuals are substantially improved, but not perfect. Row 93 has the largest Cook's
+distance: AADT=756, population=941411, lanes=2, width=24, no access control.
+Row 92 also has a large positive residual. There is no evidence here that either is
+a data-entry error. Keep them. Omitting row 93 only for sensitivity changes the
+requested back-transformed point from 5494 to 5430, about 1.2%, and the retained
+coefficient signs stay positive. This checks one influential case, not every possible
+joint-deletion scenario.
+
+The file-order Durbin-Watson statistic is 1.7726. Its computation follows the tutorial,
+but the dataset description does not establish time or spatial ordering. Therefore
+do not interpret this value as proving independent errors. Possible clustering of
+roads in a county cannot be resolved from the supplied first-five-column description.
+
+6. REQUESTED PREDICTION
+
+Population=50000; lanes=3; width=60; original access code=2, hence access=0.
+Width does not enter M11 after the simplification test.
+
+Fitted mean FIFTH-ROOT response: 5.59736.
+95% confidence interval for mean FIFTH-ROOT response: [5.40290, 5.79183].
+95% individual prediction interval on the FIFTH-ROOT scale: [4.10375, 7.09098].
+
+Raise the fitted value and individual prediction endpoints to power 5:
+  Back-transformed typical AADT: approximately 5494 vehicles/day.
+  Approximate 95% individual-road prediction interval: [1164, 17928] vehicles/day.
+
+The back-transformed point is an approximate conditional median under the normal
+transformed-error model. It is NOT the arithmetic conditional mean AADT.
+Likewise, raising the mean-root confidence limits to power 5 would NOT produce a
+confidence interval for arithmetic mean AADT. The course-level output therefore
+labels the mean-response confidence interval on its fitted fifth-root scale and
+reports the individual prediction interval in original units.
+
+The earlier extended output estimated mean AADT at about 6449 using residual
+smearing and a bootstrap interval. That is a different target and method, not a
+contradiction of the 5494 typical-value prediction. It is archived, not included
+as a required technique in the simplified workflow.
+
+Three lanes is not observed in the data; this prediction interpolates between the
+two- and four-lane observations. The wide prediction interval reflects substantial
+road-to-road variability. Its nominal coverage depends on approximate normality,
+constant error variance and independence on the fitted scale.
+
+7. FILES TO USE WHEN WRITING THE REPORT
+
+analysis.R: current course-aligned R code.
+analysis_notes.txt: this record of reasoning, limitations and lecture references.
+coursework_results/R_output.txt: complete current console output.
+coursework_results/model_fit_summary.csv: fit statistics for all 11 models.
+coursework_results/prediction.csv: clearly labelled prediction results.
+coursework_results/plots/01_scatterplot_matrix.png: original-variable scatterplots.
+coursework_results/plots/M*_residuals.png: diagnostic evidence for EVERY candidate.
+coursework_results/plots/02_final_influence_and_order.png: sensitivity/order evidence.
+coursework_results/plots/03_final_transformed_scatterplots.png: transformed relationships.
+coursework_results/all_candidate_models.rds: all 11 fitted model objects.
+coursework_results/additional_checks.rds: curvature and sensitivity fits.
+
+Suggested report order: aim and data; initial model; diagnostic problems; successive
+remedies (including failures); full/reduced F-test; final equation and interpretation;
+prediction; limitations; R code/output appendix. Describe the main trials in the body
+and retain the remaining candidates in an appendix rather than silently discarding them.

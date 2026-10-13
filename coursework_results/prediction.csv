@@ -1,0 +1,3 @@
+"quantity","estimate","lower_95","upper_95","units"
+"Mean fifth-root AADT: confidence interval",5.59736194570874,5.40289533194611,5.79182855947138,"(vehicles/day)^0.2"
+"Typical AADT point with individual-road prediction interval",5494.35800875412,1163.86338452401,17927.9595239434,"vehicles/day"

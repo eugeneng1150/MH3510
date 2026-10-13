@@ -1,0 +1,512 @@
+
+
+STEP 1: LOAD AND EXPLORE THE DATA
+=================================
+Number of road sections: 121 
+access=1: access control; access=0: no access control.
+      aadt          population         lanes         width      control_original     access     
+ Min.   :   201   Min.   :  7716   Min.   :2.0   Min.   :19.0   Min.   :1.00     Min.   :0.000  
+ 1st Qu.:  1769   1st Qu.: 25717   1st Qu.:2.0   1st Qu.:24.0   1st Qu.:2.00     1st Qu.:0.000  
+ Median :  8666   Median :113571   Median :2.0   Median :24.0   Median :2.00     Median :0.000  
+ Mean   : 19438   Mean   :263428   Mean   :3.1   Mean   :31.1   Mean   :1.78     Mean   :0.223  
+ 3rd Qu.: 21535   3rd Qu.:459784   3rd Qu.:4.0   3rd Qu.:38.0   3rd Qu.:2.00     3rd Qu.:0.000  
+ Max.   :155547   Max.   :941411   Max.   :8.0   Max.   :68.0   Max.   :2.00     Max.   :1.000  
+     control_original
+lanes  1  2
+    2  0 64
+    4 18 30
+    5  1  0
+    6  7  0
+    8  1  0
+               aadt population     lanes      width     access
+aadt       1.000000   0.620488 0.7644155  0.1218162  0.6854616
+population 0.620488   1.000000 0.4168752  0.1664928  0.2758518
+lanes      0.764415   0.416875 1.0000000  0.0991997  0.6642230
+width      0.121816   0.166493 0.0991997  1.0000000 -0.0472547
+access     0.685462   0.275852 0.6642230 -0.0472547  1.0000000
+
+
+STEP 2: FIT THE INITIAL MULTIPLE REGRESSION
+===========================================
+
+Call:
+lm(formula = aadt ~ population + lanes + width + access, data = d)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-36263  -8501   3493   6018  68317 
+
+Coefficients:
+             Estimate Std. Error t value Pr(>|t|)    
+(Intercept) -2.60e+04   5.25e+03   -4.95  2.5e-06 ***
+population   3.30e-02   4.71e-03    7.02  1.6e-10 ***
+lanes        9.16e+03   1.53e+03    5.98  2.5e-08 ***
+width        1.00e+02   1.24e+02    0.81     0.42    
+access       2.36e+04   4.52e+03    5.22  7.8e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 15300 on 116 degrees of freedom
+Multiple R-squared:  0.753,	Adjusted R-squared:  0.744 
+F-statistic: 88.3 on 4 and 116 DF,  p-value: <2e-16
+
+Negative fitted AADT values: 45 
+A significant overall F-test does not guarantee satisfactory residuals.
+
+
+STEP 3: CHECK RESIDUALS, TRY TRANSFORMATIONS, AND RECHECK
+=========================================================
+
+M1_raw
+aadt ~ population + lanes + width + access
+<environment: 0x11e419aa8>
+
+Call:
+lm(formula = aadt ~ population + lanes + width + access, data = d)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-36263  -8501   3493   6018  68317 
+
+Coefficients:
+             Estimate Std. Error t value Pr(>|t|)    
+(Intercept) -2.60e+04   5.25e+03   -4.95  2.5e-06 ***
+population   3.30e-02   4.71e-03    7.02  1.6e-10 ***
+lanes        9.16e+03   1.53e+03    5.98  2.5e-08 ***
+width        1.00e+02   1.24e+02    0.81     0.42    
+access       2.36e+04   4.52e+03    5.22  7.8e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 15300 on 116 degrees of freedom
+Multiple R-squared:  0.753,	Adjusted R-squared:  0.744 
+F-statistic: 88.3 on 4 and 116 DF,  p-value: <2e-16
+
+
+M2_log_y
+log(aadt) ~ population + lanes + width + access
+<environment: 0x11e419aa8>
+
+Call:
+lm(formula = log(aadt) ~ population + lanes + width + access, 
+    data = d)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.3152 -0.4611  0.0096  0.5935  1.8678 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept) 6.07e+00   2.83e-01   21.49  < 2e-16 ***
+population  1.53e-06   2.53e-07    6.03  2.0e-08 ***
+lanes       6.85e-01   8.23e-02    8.32  1.9e-13 ***
+width       2.50e-03   6.69e-03    0.37    0.709    
+access      6.14e-01   2.43e-01    2.53    0.013 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.823 on 116 degrees of freedom
+Multiple R-squared:  0.741,	Adjusted R-squared:  0.732 
+F-statistic:   83 on 4 and 116 DF,  p-value: <2e-16
+
+
+M3_log_y_log_population
+log(aadt) ~ log(population) + lanes + width + access
+<environment: 0x11e419aa8>
+
+Call:
+lm(formula = log(aadt) ~ log(population) + lanes + width + access, 
+    data = d)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.4044 -0.4021  0.0942  0.4787  2.0412 
+
+Coefficients:
+                Estimate Std. Error t value Pr(>|t|)    
+(Intercept)      1.47777    0.54683    2.70   0.0079 ** 
+log(population)  0.46164    0.05176    8.92    8e-15 ***
+lanes            0.58354    0.07483    7.80    3e-12 ***
+width            0.00157    0.00589    0.27   0.7901    
+access           0.65925    0.21465    3.07   0.0027 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.726 on 116 degrees of freedom
+Multiple R-squared:  0.798,	Adjusted R-squared:  0.791 
+F-statistic:  115 on 4 and 116 DF,  p-value: <2e-16
+
+
+M4_log_y_log_population_lanes
+log(aadt) ~ log(population) + log(lanes) + width + access
+<environment: 0x11e419aa8>
+
+Call:
+lm(formula = log(aadt) ~ log(population) + log(lanes) + width + 
+    access, data = d)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-2.287 -0.400  0.124  0.400  2.107 
+
+Coefficients:
+                Estimate Std. Error t value Pr(>|t|)    
+(Intercept)      1.29875    0.52644    2.47   0.0151 *  
+log(population)  0.44728    0.05017    8.91  8.2e-15 ***
+log(lanes)       1.98900    0.23158    8.59  4.7e-14 ***
+width            0.00356    0.00566    0.63   0.5309    
+access           0.66727    0.20190    3.30   0.0013 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.701 on 116 degrees of freedom
+Multiple R-squared:  0.812,	Adjusted R-squared:  0.805 
+F-statistic:  125 on 4 and 116 DF,  p-value: <2e-16
+
+
+M5_log_y_quadratic_lanes
+log(aadt) ~ log(population) + lanes + I(lanes^2) + width + access
+<environment: 0x11e419aa8>
+
+Call:
+lm(formula = log(aadt) ~ log(population) + lanes + I(lanes^2) + 
+    width + access, data = d)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-2.265 -0.400  0.104  0.405  2.125 
+
+Coefficients:
+                Estimate Std. Error t value Pr(>|t|)    
+(Intercept)      0.50422    0.61869    0.81    0.417    
+log(population)  0.44620    0.05029    8.87  1.1e-14 ***
+lanes            1.25093    0.23202    5.39  3.8e-07 ***
+I(lanes^2)      -0.09050    0.02989   -3.03    0.003 ** 
+width            0.00463    0.00578    0.80    0.425    
+access           0.70112    0.20794    3.37    0.001 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.702 on 115 degrees of freedom
+Multiple R-squared:  0.813,	Adjusted R-squared:  0.805 
+F-statistic:  100 on 5 and 115 DF,  p-value: <2e-16
+
+
+M6_log_y_reduced
+log(aadt) ~ log(population) + log(lanes) + access
+<environment: 0x11e419aa8>
+
+Call:
+lm(formula = log(aadt) ~ log(population) + log(lanes) + access, 
+    data = d)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-2.322 -0.389  0.125  0.389  2.088 
+
+Coefficients:
+                Estimate Std. Error t value Pr(>|t|)    
+(Intercept)       1.3510     0.5185    2.61   0.0104 *  
+log(population)   0.4518     0.0495    9.12  2.6e-15 ***
+log(lanes)        1.9987     0.2305    8.67  2.8e-14 ***
+access            0.6519     0.1999    3.26   0.0015 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.699 on 117 degrees of freedom
+Multiple R-squared:  0.811,	Adjusted R-squared:  0.806 
+F-statistic:  168 on 3 and 117 DF,  p-value: <2e-16
+
+
+M7_fourth_root_full
+I(aadt^0.25) ~ log(population) + log(lanes) + width + access
+<environment: 0x11e419aa8>
+
+Call:
+lm(formula = I(aadt^0.25) ~ log(population) + log(lanes) + width + 
+    access, data = d)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-4.617 -1.084  0.051  0.991  4.409 
+
+Coefficients:
+                Estimate Std. Error t value Pr(>|t|)    
+(Intercept)      -7.8466     1.1085   -7.08  1.2e-10 ***
+log(population)   1.0427     0.1056    9.87  < 2e-16 ***
+log(lanes)        4.5027     0.4876    9.23  1.5e-15 ***
+width             0.0101     0.0119    0.85      0.4    
+access            2.4009     0.4251    5.65  1.2e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.48 on 116 degrees of freedom
+Multiple R-squared:  0.857,	Adjusted R-squared:  0.852 
+F-statistic:  173 on 4 and 116 DF,  p-value: <2e-16
+
+
+M8_square_root_full
+sqrt(aadt) ~ log(population) + log(lanes) + width + access
+<environment: 0x11e419aa8>
+
+Call:
+lm(formula = sqrt(aadt) ~ log(population) + log(lanes) + width + 
+    access, data = d)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-93.06 -22.00   0.72  19.62 115.83 
+
+Coefficients:
+                Estimate Std. Error t value Pr(>|t|)    
+(Intercept)     -257.800     27.051   -9.53  3.0e-16 ***
+log(population)   21.642      2.578    8.39  1.3e-13 ***
+log(lanes)        88.145     11.900    7.41  2.2e-11 ***
+width              0.320      0.291    1.10     0.27    
+access            69.207     10.374    6.67  9.1e-10 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 36 on 116 degrees of freedom
+Multiple R-squared:  0.829,	Adjusted R-squared:  0.823 
+F-statistic:  141 on 4 and 116 DF,  p-value: <2e-16
+
+
+M9_fourth_root_reduced
+I(aadt^0.25) ~ log(population) + log(lanes) + access
+<environment: 0x11e419aa8>
+
+Call:
+lm(formula = I(aadt^0.25) ~ log(population) + log(lanes) + access, 
+    data = d)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-4.717 -0.999  0.048  0.997  4.355 
+
+Coefficients:
+                Estimate Std. Error t value Pr(>|t|)    
+(Intercept)       -7.698      1.093   -7.04  1.4e-10 ***
+log(population)    1.056      0.104   10.11  < 2e-16 ***
+log(lanes)         4.530      0.486    9.32  8.6e-16 ***
+access             2.357      0.422    5.59  1.5e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.47 on 117 degrees of freedom
+Multiple R-squared:  0.856,	Adjusted R-squared:  0.852 
+F-statistic:  231 on 3 and 117 DF,  p-value: <2e-16
+
+
+M10_fifth_root_full
+I(aadt^0.2) ~ log(population) + log(lanes) + width + access
+<environment: 0x11e419aa8>
+
+Call:
+lm(formula = I(aadt^0.2) ~ log(population) + log(lanes) + width + 
+    access, data = d)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.4167 -0.5484  0.0638  0.5207  2.2926 
+
+Coefficients:
+                Estimate Std. Error t value Pr(>|t|)    
+(Intercept)     -2.80959    0.56238   -5.00  2.1e-06 ***
+log(population)  0.52913    0.05360    9.87  < 2e-16 ***
+log(lanes)       2.30420    0.24739    9.31  9.6e-16 ***
+width            0.00481    0.00605    0.79     0.43    
+access           1.12725    0.21568    5.23  7.7e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.749 on 116 degrees of freedom
+Multiple R-squared:  0.854,	Adjusted R-squared:  0.849 
+F-statistic:  169 on 4 and 116 DF,  p-value: <2e-16
+
+
+M11_fifth_root_reduced
+I(aadt^0.2) ~ log(population) + log(lanes) + access
+<environment: 0x11e419aa8>
+
+Call:
+lm(formula = I(aadt^0.2) ~ log(population) + log(lanes) + access, 
+    data = d)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-2.464 -0.524  0.063  0.503  2.267 
+
+Coefficients:
+                Estimate Std. Error t value Pr(>|t|)    
+(Intercept)       -2.739      0.554   -4.94  2.6e-06 ***
+log(population)    0.535      0.053   10.10  < 2e-16 ***
+log(lanes)         2.317      0.246    9.40  5.6e-16 ***
+access             1.107      0.214    5.18  9.5e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.748 on 117 degrees of freedom
+Multiple R-squared:  0.853,	Adjusted R-squared:  0.849 
+F-statistic:  226 on 3 and 117 DF,  p-value: <2e-16
+
+                         model   response number_of_coefficients r_squared adjusted_r_squared residual_sd
+                        M1_raw       AADT                      5  0.752741           0.744215 1.52926e+04
+                      M2_log_y  log(AADT)                      5  0.741058           0.732129 8.22695e-01
+       M3_log_y_log_population  log(AADT)                      5  0.798178           0.791218 7.26310e-01
+ M4_log_y_log_population_lanes  log(AADT)                      5  0.811954           0.805470 7.01083e-01
+      M5_log_y_quadratic_lanes  log(AADT)                      6  0.813074           0.804947 7.02024e-01
+              M6_log_y_reduced  log(AADT)                      4  0.811314           0.806476 6.99268e-01
+           M7_fourth_root_full  AADT^0.25                      5  0.856520           0.851573 1.47627e+00
+           M8_square_root_full sqrt(AADT)                      5  0.829212           0.823322 3.60244e+01
+        M9_fourth_root_reduced  AADT^0.25                      4  0.855626           0.851924 1.47453e+00
+           M10_fifth_root_full   AADT^0.2                      5  0.853601           0.848553 7.48941e-01
+        M11_fifth_root_reduced   AADT^0.2                      4  0.852804           0.849030 7.47762e-01
+Compare R-squared, adjusted R-squared and residual SD only on the SAME response scale.
+Across different response scales, judge residual patterns and explain the transformation.
+
+
+STEP 4: FULL/REDUCED MODEL F-TESTS AND FINAL MODEL
+==================================================
+Log model: test whether road width is needed, H0: beta_width=0.
+Analysis of Variance Table
+
+Model 1: log(aadt) ~ log(population) + log(lanes) + access
+Model 2: log(aadt) ~ log(population) + log(lanes) + width + access
+  Res.Df   RSS Df Sum of Sq     F Pr(>F)
+1    117 57.21                          
+2    116 57.02  1    0.1941 0.395  0.531
+Log model: test whether the quadratic lane term is needed.
+Analysis of Variance Table
+
+Model 1: log(aadt) ~ log(population) + lanes + width + access
+Model 2: log(aadt) ~ log(population) + lanes + I(lanes^2) + width + access
+  Res.Df   RSS Df Sum of Sq     F  Pr(>F)   
+1    116 61.19                              
+2    115 56.68  1     4.517 9.165 0.00305 **
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Fourth-root model: test whether road width is needed.
+Analysis of Variance Table
+
+Model 1: I(aadt^0.25) ~ log(population) + log(lanes) + access
+Model 2: I(aadt^0.25) ~ log(population) + log(lanes) + width + access
+  Res.Df   RSS Df Sum of Sq     F Pr(>F)
+1    117 254.4                          
+2    116 252.8  1     1.576 0.723  0.397
+Fifth-root model: test whether road width is needed.
+Analysis of Variance Table
+
+Model 1: I(aadt^0.2) ~ log(population) + log(lanes) + access
+Model 2: I(aadt^0.2) ~ log(population) + log(lanes) + width + access
+  Res.Df   RSS Df Sum of Sq     F Pr(>F)
+1    117 65.42                          
+2    116 65.07  1    0.3543 0.632  0.428
+
+Selected model:
+I(aadt^0.2) ~ log(population) + log(lanes) + access
+<environment: 0x11e419aa8>
+
+Call:
+lm(formula = I(aadt^0.2) ~ log(population) + log(lanes) + access, 
+    data = d)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-2.464 -0.524  0.063  0.503  2.267 
+
+Coefficients:
+                Estimate Std. Error t value Pr(>|t|)    
+(Intercept)       -2.739      0.554   -4.94  2.6e-06 ***
+log(population)    0.535      0.053   10.10  < 2e-16 ***
+log(lanes)         2.317      0.246    9.40  5.6e-16 ***
+access             1.107      0.214    5.18  9.5e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.748 on 117 degrees of freedom
+Multiple R-squared:  0.853,	Adjusted R-squared:  0.849 
+F-statistic:  226 on 3 and 117 DF,  p-value: <2e-16
+
+Ordinary individual coefficient confidence intervals:
+                    2.5 %    97.5 %
+(Intercept)     -3.837077 -1.640953
+log(population)  0.430284  0.640093
+log(lanes)       1.829154  2.805336
+access           0.683158  1.529836
+No confidence region or Bonferroni limits are calculated.
+Optional curvature check (Chapter 4 Part II polynomial regression):
+Analysis of Variance Table
+
+Model 1: I(aadt^0.2) ~ log(population) + log(lanes) + access
+Model 2: I(aadt^0.2) ~ log(population) + log(lanes) + access + I(log(population)^2) + 
+    I(log(lanes)^2)
+  Res.Df   RSS Df Sum of Sq     F Pr(>F)
+1    117 65.42                          
+2    115 64.59  2    0.8267 0.736  0.481
+Largest Cook's-distance row: 93 
+   aadt population lanes width control_original access
+93  756     941411     2    24                2      0
+                 all_rows omit_one_for_sensitivity
+(Intercept)     -2.739015                 -3.02246
+log(population)  0.535189                  0.57260
+log(lanes)       2.317245                  2.19476
+access           1.106497                  1.11335
+Final model retains ALL road sections. Sensitivity fit is only a check.
+Durbin-Watson statistic in FILE order: 1.77264 
+No time/spatial order is provided, so no serial-correlation conclusion is drawn.
+Independence remains an assumption; a row-order plot cannot establish it.
+
+
+STEP 5: PREDICTION FOR THE REQUESTED ROAD
+=========================================
+Original control code x4=2 means NO access control, hence access=0.
+Width=60 is recorded, but width is excluded from the selected model.
+  population lanes width access
+1      50000     3    60      0
+95% confidence interval for mean FIFTH-ROOT AADT:
+      fit    lwr     upr
+1 5.59736 5.4029 5.79183
+95% prediction interval for one road, on the FIFTH-ROOT scale:
+      fit     lwr     upr
+1 5.59736 4.10375 7.09098
+Back-transformed fitted value (typical AADT): 5494.36 vehicles/day
+95% individual-road prediction interval in vehicles/day:
+     lwr      upr 
+ 1163.86 17927.96 
+This point is a typical/approximate median prediction, NOT the arithmetic mean AADT.
+A mean-AADT CI requires an extra retransformation method; it is not claimed here.
+There are no 3-lane observations; 3 lanes interpolates between 2 and 4 lanes.
+Sensitivity-only back-transformed point: 5429.77 
+Fourth-root alternative's back-transformed point: 5727.83 
+                                                    quantity   estimate  lower_95    upper_95
+                   Mean fifth-root AADT: confidence interval    5.59736    5.4029     5.79183
+ Typical AADT point with individual-road prediction interval 5494.35801 1163.8634 17927.95952
+              units
+ (vehicles/day)^0.2
+       vehicles/day
+
+
+SESSION INFORMATION
+===================
+R version 4.6.1 (2026-06-24)
+Platform: aarch64-apple-darwin24.6.0
+Running under: macOS Sequoia 15.6
+
+Matrix products: default
+BLAS:   /opt/homebrew/Cellar/openblas/0.3.34/lib/libopenblasp-r0.3.34.dylib 
+LAPACK: /opt/homebrew/Cellar/r/4.6.1/lib/R/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] C.UTF-8/C.UTF-8/C.UTF-8/C/C.UTF-8/C.UTF-8
+
+time zone: Asia/Singapore
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+loaded via a namespace (and not attached):
+[1] compiler_4.6.1
+
+Read analysis_notes.txt for the explanation of every candidate model.

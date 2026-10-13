@@ -1,0 +1,21 @@
+# Local lecture notes (excluded at the author's request).
+/MH3510_CH4part2(ppt).pdf
+/MH3510_Chapter2 (1).pdf
+/MH3510_Chapter3.pdf
+/MH3510_Chapter4_Part1.pdf
+/MH3510_Chatper1.pdf
+/chapter 6(ppt).pdf
+/chapter5(ppt).pdf
+
+# Rendering intermediates and LaTeX build logs.
+/tmp/
+*.aux
+*.log
+*.out
+*.synctex.gz
+.DS_Store
+.Rhistory
+.RData
+
+# Duplicate exploratory outputs are preserved under archive/extended_analysis/.
+/results/
