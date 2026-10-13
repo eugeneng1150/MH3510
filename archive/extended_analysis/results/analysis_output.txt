@@ -1,0 +1,618 @@
+
+
+1. DATA AND GRAPHICAL EXPLORATION
+=================================
+Observations: 121 
+Only original columns 1-5 are used.
+access = 1 means access control; access = 0 means no access control.
+      aadt          population         lanes         width      control_original     access     
+ Min.   :   201   Min.   :  7716   Min.   :2.0   Min.   :19.0   Min.   :1.00     Min.   :0.000  
+ 1st Qu.:  1769   1st Qu.: 25717   1st Qu.:2.0   1st Qu.:24.0   1st Qu.:2.00     1st Qu.:0.000  
+ Median :  8666   Median :113571   Median :2.0   Median :24.0   Median :2.00     Median :0.000  
+ Mean   : 19438   Mean   :263428   Mean   :3.1   Mean   :31.1   Mean   :1.78     Mean   :0.223  
+ 3rd Qu.: 21535   3rd Qu.:459784   3rd Qu.:4.0   3rd Qu.:38.0   3rd Qu.:2.00     3rd Qu.:0.000  
+ Max.   :155547   Max.   :941411   Max.   :8.0   Max.   :68.0   Max.   :2.00     Max.   :1.000  
+     control_original
+lanes  1  2
+    2  0 64
+    4 18 30
+    5  1  0
+    6  7  0
+    8  1  0
+               aadt population     lanes      width     access
+aadt       1.000000   0.620488 0.7644155  0.1218162  0.6854616
+population 0.620488   1.000000 0.4168752  0.1664928  0.2758518
+lanes      0.764415   0.416875 1.0000000  0.0991997  0.6642230
+width      0.121816   0.166493 0.0991997  1.0000000 -0.0472547
+access     0.685462   0.275852 0.6642230 -0.0472547  1.0000000
+
+
+2. ALL CANDIDATE MODELS: PRESERVED EXPLORATION
+==============================================
+
+M1_raw
+
+Call:
+lm(formula = f, data = d)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-36263  -8501   3493   6018  68317 
+
+Coefficients:
+             Estimate Std. Error t value Pr(>|t|)    
+(Intercept) -2.60e+04   5.25e+03   -4.95  2.5e-06 ***
+population   3.30e-02   4.71e-03    7.02  1.6e-10 ***
+lanes        9.16e+03   1.53e+03    5.98  2.5e-08 ***
+width        1.00e+02   1.24e+02    0.81     0.42    
+access       2.36e+04   4.52e+03    5.22  7.8e-07 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 15300 on 116 degrees of freedom
+Multiple R-squared:  0.753,	Adjusted R-squared:  0.744 
+F-statistic: 88.3 on 4 and 116 DF,  p-value: <2e-16
+
+
+M2_log_y
+
+Call:
+lm(formula = f, data = d)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.3152 -0.4611  0.0096  0.5935  1.8678 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept) 6.07e+00   2.83e-01   21.49  < 2e-16 ***
+population  1.53e-06   2.53e-07    6.03  2.0e-08 ***
+lanes       6.85e-01   8.23e-02    8.32  1.9e-13 ***
+width       2.50e-03   6.69e-03    0.37    0.709    
+access      6.14e-01   2.43e-01    2.53    0.013 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.823 on 116 degrees of freedom
+Multiple R-squared:  0.741,	Adjusted R-squared:  0.732 
+F-statistic:   83 on 4 and 116 DF,  p-value: <2e-16
+
+
+M3_log_y_log_population
+
+Call:
+lm(formula = f, data = d)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.4044 -0.4021  0.0942  0.4787  2.0412 
+
+Coefficients:
+                Estimate Std. Error t value Pr(>|t|)    
+(Intercept)      1.47777    0.54683    2.70   0.0079 ** 
+log(population)  0.46164    0.05176    8.92    8e-15 ***
+lanes            0.58354    0.07483    7.80    3e-12 ***
+width            0.00157    0.00589    0.27   0.7901    
+access           0.65925    0.21465    3.07   0.0027 ** 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.726 on 116 degrees of freedom
+Multiple R-squared:  0.798,	Adjusted R-squared:  0.791 
+F-statistic:  115 on 4 and 116 DF,  p-value: <2e-16
+
+
+M4_log_y_log_population_lanes
+
+Call:
+lm(formula = f, data = d)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-2.287 -0.400  0.124  0.400  2.107 
+
+Coefficients:
+                Estimate Std. Error t value Pr(>|t|)    
+(Intercept)      1.29875    0.52644    2.47   0.0151 *  
+log(population)  0.44728    0.05017    8.91  8.2e-15 ***
+log(lanes)       1.98900    0.23158    8.59  4.7e-14 ***
+width            0.00356    0.00566    0.63   0.5309    
+access           0.66727    0.20190    3.30   0.0013 ** 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.701 on 116 degrees of freedom
+Multiple R-squared:  0.812,	Adjusted R-squared:  0.805 
+F-statistic:  125 on 4 and 116 DF,  p-value: <2e-16
+
+
+M5_log_y_quadratic_lanes
+
+Call:
+lm(formula = f, data = d)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-2.265 -0.400  0.104  0.405  2.125 
+
+Coefficients:
+                Estimate Std. Error t value Pr(>|t|)    
+(Intercept)      0.50422    0.61869    0.81    0.417    
+log(population)  0.44620    0.05029    8.87  1.1e-14 ***
+lanes            1.25093    0.23202    5.39  3.8e-07 ***
+I(lanes^2)      -0.09050    0.02989   -3.03    0.003 ** 
+width            0.00463    0.00578    0.80    0.425    
+access           0.70112    0.20794    3.37    0.001 ** 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.702 on 115 degrees of freedom
+Multiple R-squared:  0.813,	Adjusted R-squared:  0.805 
+F-statistic:  100 on 5 and 115 DF,  p-value: <2e-16
+
+
+M6_log_y_reduced
+
+Call:
+lm(formula = f, data = d)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-2.322 -0.389  0.125  0.389  2.088 
+
+Coefficients:
+                Estimate Std. Error t value Pr(>|t|)    
+(Intercept)       1.3510     0.5185    2.61   0.0104 *  
+log(population)   0.4518     0.0495    9.12  2.6e-15 ***
+log(lanes)        1.9987     0.2305    8.67  2.8e-14 ***
+access            0.6519     0.1999    3.26   0.0015 ** 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.699 on 117 degrees of freedom
+Multiple R-squared:  0.811,	Adjusted R-squared:  0.806 
+F-statistic:  168 on 3 and 117 DF,  p-value: <2e-16
+
+
+M7_fourth_root_full
+
+Call:
+lm(formula = f, data = d)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-4.617 -1.084  0.051  0.991  4.409 
+
+Coefficients:
+                Estimate Std. Error t value Pr(>|t|)    
+(Intercept)      -7.8466     1.1085   -7.08  1.2e-10 ***
+log(population)   1.0427     0.1056    9.87  < 2e-16 ***
+log(lanes)        4.5027     0.4876    9.23  1.5e-15 ***
+width             0.0101     0.0119    0.85      0.4    
+access            2.4009     0.4251    5.65  1.2e-07 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 1.48 on 116 degrees of freedom
+Multiple R-squared:  0.857,	Adjusted R-squared:  0.852 
+F-statistic:  173 on 4 and 116 DF,  p-value: <2e-16
+
+
+M8_square_root_full
+
+Call:
+lm(formula = f, data = d)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-93.06 -22.00   0.72  19.62 115.83 
+
+Coefficients:
+                Estimate Std. Error t value Pr(>|t|)    
+(Intercept)     -257.800     27.051   -9.53  3.0e-16 ***
+log(population)   21.642      2.578    8.39  1.3e-13 ***
+log(lanes)        88.145     11.900    7.41  2.2e-11 ***
+width              0.320      0.291    1.10     0.27    
+access            69.207     10.374    6.67  9.1e-10 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 36 on 116 degrees of freedom
+Multiple R-squared:  0.829,	Adjusted R-squared:  0.823 
+F-statistic:  141 on 4 and 116 DF,  p-value: <2e-16
+
+
+M9_fourth_root_reduced
+
+Call:
+lm(formula = f, data = d)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-4.717 -0.999  0.048  0.997  4.355 
+
+Coefficients:
+                Estimate Std. Error t value Pr(>|t|)    
+(Intercept)       -7.698      1.093   -7.04  1.4e-10 ***
+log(population)    1.056      0.104   10.11  < 2e-16 ***
+log(lanes)         4.530      0.486    9.32  8.6e-16 ***
+access             2.357      0.422    5.59  1.5e-07 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 1.47 on 117 degrees of freedom
+Multiple R-squared:  0.856,	Adjusted R-squared:  0.852 
+F-statistic:  231 on 3 and 117 DF,  p-value: <2e-16
+
+
+M10_fifth_root_full
+
+Call:
+lm(formula = f, data = d)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.4167 -0.5484  0.0638  0.5207  2.2926 
+
+Coefficients:
+                Estimate Std. Error t value Pr(>|t|)    
+(Intercept)     -2.80959    0.56238   -5.00  2.1e-06 ***
+log(population)  0.52913    0.05360    9.87  < 2e-16 ***
+log(lanes)       2.30420    0.24739    9.31  9.6e-16 ***
+width            0.00481    0.00605    0.79     0.43    
+access           1.12725    0.21568    5.23  7.7e-07 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.749 on 116 degrees of freedom
+Multiple R-squared:  0.854,	Adjusted R-squared:  0.849 
+F-statistic:  169 on 4 and 116 DF,  p-value: <2e-16
+
+
+M11_fifth_root_reduced
+
+Call:
+lm(formula = f, data = d)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-2.464 -0.524  0.063  0.503  2.267 
+
+Coefficients:
+                Estimate Std. Error t value Pr(>|t|)    
+(Intercept)       -2.739      0.554   -4.94  2.6e-06 ***
+log(population)    0.535      0.053   10.10  < 2e-16 ***
+log(lanes)         2.317      0.246    9.40  5.6e-16 ***
+access             1.107      0.214    5.18  9.5e-07 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.748 on 117 degrees of freedom
+Multiple R-squared:  0.853,	Adjusted R-squared:  0.849 
+F-statistic:  226 on 3 and 117 DF,  p-value: <2e-16
+
+
+
+3. RESIDUAL CHECKS FOR EVERY MODEL
+==================================
+
+M1_raw
+
+	Shapiro-Wilk normality test
+
+data:  residuals(m)
+W = 0.9015, p-value = 2.12e-07
+
+  statistic          df     p_value 
+4.10045e+01 4.00000e+00 2.68207e-08 
+
+M2_log_y
+
+	Shapiro-Wilk normality test
+
+data:  residuals(m)
+W = 0.986, p-value = 0.245
+
+statistic        df   p_value 
+8.0009353 4.0000000 0.0915439 
+
+M3_log_y_log_population
+
+	Shapiro-Wilk normality test
+
+data:  residuals(m)
+W = 0.9752, p-value = 0.0246
+
+statistic        df   p_value 
+8.2625405 4.0000000 0.0824208 
+
+M4_log_y_log_population_lanes
+
+	Shapiro-Wilk normality test
+
+data:  residuals(m)
+W = 0.9802, p-value = 0.0719
+
+  statistic          df     p_value 
+14.94909428  4.00000000  0.00480797 
+
+M5_log_y_quadratic_lanes
+
+	Shapiro-Wilk normality test
+
+data:  residuals(m)
+W = 0.9802, p-value = 0.0719
+
+  statistic          df     p_value 
+15.90519739  5.00000000  0.00712002 
+
+M6_log_y_reduced
+
+	Shapiro-Wilk normality test
+
+data:  residuals(m)
+W = 0.9776, p-value = 0.0412
+
+  statistic          df     p_value 
+13.64374655  3.00000000  0.00343245 
+
+M7_fourth_root_full
+
+	Shapiro-Wilk normality test
+
+data:  residuals(m)
+W = 0.9915, p-value = 0.668
+
+statistic        df   p_value 
+ 4.883652  4.000000  0.299445 
+
+M8_square_root_full
+
+	Shapiro-Wilk normality test
+
+data:  residuals(m)
+W = 0.9853, p-value = 0.212
+
+  statistic          df     p_value 
+2.81134e+01 4.00000e+00 1.18298e-05 
+
+M9_fourth_root_reduced
+
+	Shapiro-Wilk normality test
+
+data:  residuals(m)
+W = 0.9913, p-value = 0.65
+
+statistic        df   p_value 
+  4.37196   3.00000   0.22400 
+
+M10_fifth_root_full
+
+	Shapiro-Wilk normality test
+
+data:  residuals(m)
+W = 0.9876, p-value = 0.338
+
+statistic        df   p_value 
+ 6.247240  4.000000  0.181429 
+
+M11_fifth_root_reduced
+
+	Shapiro-Wilk normality test
+
+data:  residuals(m)
+W = 0.9879, p-value = 0.357
+
+statistic        df   p_value 
+ 5.521447  3.000000  0.137361 
+                         model response_scale parameters r_squared adjusted_r_squared residual_sd   shapiro_p
+                        M1_raw            raw          5  0.752741           0.744215 1.52926e+04 2.12235e-07
+                      M2_log_y            log          5  0.741058           0.732129 8.22695e-01 2.44791e-01
+       M3_log_y_log_population            log          5  0.798178           0.791218 7.26310e-01 2.45826e-02
+ M4_log_y_log_population_lanes            log          5  0.811954           0.805470 7.01083e-01 7.19256e-02
+      M5_log_y_quadratic_lanes            log          6  0.813074           0.804947 7.02024e-01 7.19085e-02
+              M6_log_y_reduced            log          4  0.811314           0.806476 6.99268e-01 4.12491e-02
+           M7_fourth_root_full    fourth_root          5  0.856520           0.851573 1.47627e+00 6.68268e-01
+           M8_square_root_full    square_root          5  0.829212           0.823322 3.60244e+01 2.12058e-01
+        M9_fourth_root_reduced    fourth_root          4  0.855626           0.851924 1.47453e+00 6.49526e-01
+           M10_fifth_root_full     fifth_root          5  0.853601           0.848553 7.48941e-01 3.38482e-01
+        M11_fifth_root_reduced     fifth_root          4  0.852804           0.849030 7.47762e-01 3.57290e-01
+ variance_test_p max_cooks_distance
+     2.68207e-08           0.295756
+     9.15439e-02           0.149337
+     8.24208e-02           0.146731
+     4.80797e-03           0.151096
+     7.12002e-03           0.125739
+     3.43245e-03           0.173357
+     2.99445e-01           0.138879
+     1.18298e-05           0.109711
+     2.24000e-01           0.160879
+     1.81429e-01           0.147839
+     1.37361e-01           0.170708
+R-squared and residual SD are NOT directly comparable across response transformations.
+Diagnostic p-values are supporting evidence, not proof that assumptions hold.
+No time or spatial ordering is documented. Row number is not assumed to be time.
+A Durbin-Watson significance test would not establish independence here.
+
+
+4. TRANSFORMATION, MODEL COMPARISON AND SELECTION
+=================================================
+Box-Cox maximizing lambda: 0.18 
+Approximate 95% profile support (grid): 0.11 0.24 
+Compare powers 0.20 and 0.25 using residuals and original-scale prediction error.
+Power 0.25 is just outside the 95% likelihood support; Box-Cox alone favors 0.20.
+
+Width deletion test on fourth-root response:
+Analysis of Variance Table
+
+Model 1: I(aadt^0.25) ~ log(population) + log(lanes) + access
+Model 2: I(aadt^0.25) ~ log(population) + log(lanes) + width + access
+  Res.Df   RSS Df Sum of Sq     F Pr(>F)
+1    117 254.4                          
+2    116 252.8  1     1.576 0.723  0.397
+
+Width deletion test for the earlier log-response candidate:
+Analysis of Variance Table
+
+Model 1: log(aadt) ~ log(population) + log(lanes) + access
+Model 2: log(aadt) ~ log(population) + log(lanes) + width + access
+  Res.Df   RSS Df Sum of Sq     F Pr(>F)
+1    117 57.21                          
+2    116 57.02  1    0.1941 0.395  0.531
+
+Width deletion test on fifth-root response:
+Analysis of Variance Table
+
+Model 1: I(aadt^0.2) ~ log(population) + log(lanes) + access
+Model 2: I(aadt^0.2) ~ log(population) + log(lanes) + width + access
+  Res.Df   RSS Df Sum of Sq     F Pr(>F)
+1    117 65.42                          
+2    116 65.07  1    0.3543 0.632  0.428
+
+Quadratic lanes test within log-response models:
+Analysis of Variance Table
+
+Model 1: log(aadt) ~ log(population) + lanes + width + access
+Model 2: log(aadt) ~ log(population) + lanes + I(lanes^2) + width + access
+  Res.Df   RSS Df Sum of Sq     F  Pr(>F)   
+1    116 61.19                              
+2    115 56.68  1     4.517 9.165 0.00305 **
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Additional curvature check for selected fifth-root model:
+Analysis of Variance Table
+
+Model 1: I(aadt^0.2) ~ log(population) + log(lanes) + access
+Model 2: I(aadt^0.2) ~ log(population) + log(lanes) + access + I(log(population)^2) + 
+    I(log(lanes)^2)
+  Res.Df   RSS Df Sum of Sq     F Pr(>F)
+1    117 65.42                          
+2    115 64.59  2    0.8267 0.736  0.481
+                         model response_scale parameters r_squared adjusted_r_squared residual_sd   shapiro_p
+                        M1_raw            raw          5  0.752741           0.744215 1.52926e+04 2.12235e-07
+                      M2_log_y            log          5  0.741058           0.732129 8.22695e-01 2.44791e-01
+       M3_log_y_log_population            log          5  0.798178           0.791218 7.26310e-01 2.45826e-02
+ M4_log_y_log_population_lanes            log          5  0.811954           0.805470 7.01083e-01 7.19256e-02
+      M5_log_y_quadratic_lanes            log          6  0.813074           0.804947 7.02024e-01 7.19085e-02
+              M6_log_y_reduced            log          4  0.811314           0.806476 6.99268e-01 4.12491e-02
+           M7_fourth_root_full    fourth_root          5  0.856520           0.851573 1.47627e+00 6.68268e-01
+           M8_square_root_full    square_root          5  0.829212           0.823322 3.60244e+01 2.12058e-01
+        M9_fourth_root_reduced    fourth_root          4  0.855626           0.851924 1.47453e+00 6.49526e-01
+           M10_fifth_root_full     fifth_root          5  0.853601           0.848553 7.48941e-01 3.38482e-01
+        M11_fifth_root_reduced     fifth_root          4  0.852804           0.849030 7.47762e-01 3.57290e-01
+ variance_test_p max_cooks_distance cv_rmse cv_rmse_sd   cv_mae cv_mae_sd
+     2.68207e-08           0.295756 16064.4    226.304 11293.19  183.7493
+     9.15439e-02           0.149337 66449.3   4723.869 18227.49  669.1052
+     8.24208e-02           0.146731 50648.9   3538.764 13515.40  453.1050
+     4.80797e-03           0.151096 16664.6    843.472  8063.88  151.3832
+     7.12002e-03           0.125739 13127.5    367.313  7276.64  135.8883
+     3.43245e-03           0.173357 15344.0    522.730  7718.82  122.7185
+     2.99445e-01           0.138879 11852.4    138.196  6754.42   57.5813
+     1.18298e-05           0.109711 14828.2    154.295  8404.84   99.0170
+     2.24000e-01           0.160879 11891.2    160.277  6738.33   86.5475
+     1.81429e-01           0.147839 11022.1    141.394  6370.78   54.5374
+     1.37361e-01           0.170708 11019.3    162.364  6350.63   72.6152
+CV: 10 repetitions of 10-fold CV, identical splits for all candidates.
+SD measures variation between repetitions, not a confidence interval.
+Transformations were explored using these data; this is internal validation,
+not an independent test set or an unbiased assessment of the selection process.
+Final selection balances original-scale CV, diagnostics, and simplicity; see interpretation.txt.
+
+
+FINAL MODEL: INFLUENCE, COLLINEARITY AND SENSITIVITY
+====================================================
+
+Call:
+lm(formula = f, data = d)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-2.464 -0.524  0.063  0.503  2.267 
+
+Coefficients:
+                Estimate Std. Error t value Pr(>|t|)    
+(Intercept)       -2.739      0.554   -4.94  2.6e-06 ***
+log(population)    0.535      0.053   10.10  < 2e-16 ***
+log(lanes)         2.317      0.246    9.40  5.6e-16 ***
+access             1.107      0.214    5.18  9.5e-07 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.748 on 117 degrees of freedom
+Multiple R-squared:  0.853,	Adjusted R-squared:  0.849 
+F-statistic:  226 on 3 and 117 DF,  p-value: <2e-16
+
+                    2.5 %    97.5 %
+(Intercept)     -3.837077 -1.640953
+log(population)  0.430284  0.640093
+log(lanes)       1.829154  2.805336
+access           0.683158  1.529836
+log(population)      log(lanes)          access 
+        1.31355         2.04253         1.71408 
+ row  aadt population lanes width control_original access studentized_residual  leverage cooks_distance flag
+  35  2934      12361     4    24                2      0           -0.8011186 0.0694714    0.012015487 TRUE
+  46  4933      13043     4    24                2      0           -0.0921665 0.0679922    0.000156251 TRUE
+  57  5697      36329     4    24                1      1           -2.1789061 0.0520865    0.063194666 TRUE
+  91 38857     113571     4    24                2      0            2.1742637 0.0324723    0.038440921 TRUE
+  92 12230      25717     2    24                2      0            3.1754676 0.0178789    0.042585286 TRUE
+  93   756     941411     2    24                2      0           -3.5568271 0.0560242    0.170707523 TRUE
+  96  9843     941411     4    44                2      0           -2.1449780 0.0431743    0.050351632 TRUE
+Sensitivity only: refit omitting highest Cook's-distance row 93 
+                all_observations sensitivity_only
+(Intercept)            -2.739015         -3.02246
+log(population)         0.535189          0.57260
+log(lanes)              2.317245          2.19476
+access                  1.106497          1.11335
+All observations remain in the chosen model; flags alone do not justify deletion.
+                 estimate    hc3_se approximate_t_p
+(Intercept)     -2.739015 0.5804456     6.62648e-06
+log(population)  0.535189 0.0604391     1.06719e-14
+log(lanes)       2.317245 0.2549512     3.03209e-15
+access           1.106497 0.1952167     1.05615e-07
+
+
+5. REQUESTED PREDICTION AND INTERVALS
+=====================================
+  population lanes width control_original access
+1      50000     3    60                2      0
+Original x4=2 is recoded to access=0. Width is omitted by the final model.
+      fit    lwr     upr
+1 5.59736 5.4029 5.79183
+      fit     lwr     upr
+1 5.59736 4.10375 7.09098
+                                        quantity estimate lower_95 upper_95
+        Mean AADT (residual-smearing correction)  6448.69  5516.99  7501.27
+ Typical AADT (inverse transformed fitted value)  5494.36  4603.97  6517.46
+        Individual road AADT prediction interval       NA  1163.86 17927.96
+The typical-value CI is NOT a confidence interval for mean AADT.
+The prediction interval uses approximately normal, constant-variance root-scale errors.
+The mean CI uses 2000 pairs-bootstrap resamples and a common residual distribution.
+Both are conditional on the selected model and assumed independent road sections.
+Three lanes is unobserved: the prediction interpolates between two and four lanes.
+Sensitivity-only mean prediction: 6310.12 
+
+
+REPRODUCIBILITY
+===============
+R version 4.6.1 (2026-06-24)
+Platform: aarch64-apple-darwin24.6.0
+Running under: macOS Sequoia 15.6
+
+Matrix products: default
+BLAS:   /opt/homebrew/Cellar/openblas/0.3.34/lib/libopenblasp-r0.3.34.dylib 
+LAPACK: /opt/homebrew/Cellar/r/4.6.1/lib/R/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] C.UTF-8/C.UTF-8/C.UTF-8/C/C.UTF-8/C.UTF-8
+
+time zone: Asia/Singapore
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+loaded via a namespace (and not attached):
+[1] MASS_7.3-65    compiler_4.6.1
+
+All outputs were written under results/. Source data were not modified.

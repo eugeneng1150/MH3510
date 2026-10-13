@@ -1,0 +1,4 @@
+"quantity","estimate","lower_95","upper_95"
+"Mean AADT (residual-smearing correction)",6448.68859929118,5516.99115470933,7501.26612864288
+"Typical AADT (inverse transformed fitted value)",5494.35800875412,4603.97303204141,6517.46174059587
+"Individual road AADT prediction interval",NA,1163.86338452401,17927.9595239434
