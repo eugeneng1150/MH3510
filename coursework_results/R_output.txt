@@ -59,7 +59,7 @@ STEP 3: CHECK RESIDUALS, TRY TRANSFORMATIONS, AND RECHECK
 
 M1_raw
 aadt ~ population + lanes + width + access
-<environment: 0x11e419aa8>
+<environment: 0x126e8d508>
 
 Call:
 lm(formula = aadt ~ population + lanes + width + access, data = d)
@@ -85,7 +85,7 @@ F-statistic: 88.3 on 4 and 116 DF,  p-value: <2e-16
 
 M2_log_y
 log(aadt) ~ population + lanes + width + access
-<environment: 0x11e419aa8>
+<environment: 0x126e8d508>
 
 Call:
 lm(formula = log(aadt) ~ population + lanes + width + access, 
@@ -112,7 +112,7 @@ F-statistic:   83 on 4 and 116 DF,  p-value: <2e-16
 
 M3_log_y_log_population
 log(aadt) ~ log(population) + lanes + width + access
-<environment: 0x11e419aa8>
+<environment: 0x126e8d508>
 
 Call:
 lm(formula = log(aadt) ~ log(population) + lanes + width + access, 
@@ -139,7 +139,7 @@ F-statistic:  115 on 4 and 116 DF,  p-value: <2e-16
 
 M4_log_y_log_population_lanes
 log(aadt) ~ log(population) + log(lanes) + width + access
-<environment: 0x11e419aa8>
+<environment: 0x126e8d508>
 
 Call:
 lm(formula = log(aadt) ~ log(population) + log(lanes) + width + 
@@ -166,7 +166,7 @@ F-statistic:  125 on 4 and 116 DF,  p-value: <2e-16
 
 M5_log_y_quadratic_lanes
 log(aadt) ~ log(population) + lanes + I(lanes^2) + width + access
-<environment: 0x11e419aa8>
+<environment: 0x126e8d508>
 
 Call:
 lm(formula = log(aadt) ~ log(population) + lanes + I(lanes^2) + 
@@ -194,7 +194,7 @@ F-statistic:  100 on 5 and 115 DF,  p-value: <2e-16
 
 M6_log_y_reduced
 log(aadt) ~ log(population) + log(lanes) + access
-<environment: 0x11e419aa8>
+<environment: 0x126e8d508>
 
 Call:
 lm(formula = log(aadt) ~ log(population) + log(lanes) + access, 
@@ -220,7 +220,7 @@ F-statistic:  168 on 3 and 117 DF,  p-value: <2e-16
 
 M7_fourth_root_full
 I(aadt^0.25) ~ log(population) + log(lanes) + width + access
-<environment: 0x11e419aa8>
+<environment: 0x126e8d508>
 
 Call:
 lm(formula = I(aadt^0.25) ~ log(population) + log(lanes) + width + 
@@ -247,7 +247,7 @@ F-statistic:  173 on 4 and 116 DF,  p-value: <2e-16
 
 M8_square_root_full
 sqrt(aadt) ~ log(population) + log(lanes) + width + access
-<environment: 0x11e419aa8>
+<environment: 0x126e8d508>
 
 Call:
 lm(formula = sqrt(aadt) ~ log(population) + log(lanes) + width + 
@@ -274,7 +274,7 @@ F-statistic:  141 on 4 and 116 DF,  p-value: <2e-16
 
 M9_fourth_root_reduced
 I(aadt^0.25) ~ log(population) + log(lanes) + access
-<environment: 0x11e419aa8>
+<environment: 0x126e8d508>
 
 Call:
 lm(formula = I(aadt^0.25) ~ log(population) + log(lanes) + access, 
@@ -300,7 +300,7 @@ F-statistic:  231 on 3 and 117 DF,  p-value: <2e-16
 
 M10_fifth_root_full
 I(aadt^0.2) ~ log(population) + log(lanes) + width + access
-<environment: 0x11e419aa8>
+<environment: 0x126e8d508>
 
 Call:
 lm(formula = I(aadt^0.2) ~ log(population) + log(lanes) + width + 
@@ -327,7 +327,7 @@ F-statistic:  169 on 4 and 116 DF,  p-value: <2e-16
 
 M11_fifth_root_reduced
 I(aadt^0.2) ~ log(population) + log(lanes) + access
-<environment: 0x11e419aa8>
+<environment: 0x126e8d508>
 
 Call:
 lm(formula = I(aadt^0.2) ~ log(population) + log(lanes) + access, 
@@ -405,7 +405,7 @@ Model 2: I(aadt^0.2) ~ log(population) + log(lanes) + width + access
 
 Selected model:
 I(aadt^0.2) ~ log(population) + log(lanes) + access
-<environment: 0x11e419aa8>
+<environment: 0x126e8d508>
 
 Call:
 lm(formula = I(aadt^0.2) ~ log(population) + log(lanes) + access, 
@@ -485,28 +485,3 @@ Fourth-root alternative's back-transformed point: 5727.83
               units
  (vehicles/day)^0.2
        vehicles/day
-
-
-SESSION INFORMATION
-===================
-R version 4.6.1 (2026-06-24)
-Platform: aarch64-apple-darwin24.6.0
-Running under: macOS Sequoia 15.6
-
-Matrix products: default
-BLAS:   /opt/homebrew/Cellar/openblas/0.3.34/lib/libopenblasp-r0.3.34.dylib 
-LAPACK: /opt/homebrew/Cellar/r/4.6.1/lib/R/lib/libRlapack.dylib;  LAPACK version 3.12.1
-
-locale:
-[1] C.UTF-8/C.UTF-8/C.UTF-8/C/C.UTF-8/C.UTF-8
-
-time zone: Asia/Singapore
-tzcode source: internal
-
-attached base packages:
-[1] stats     graphics  grDevices utils     datasets  methods   base     
-
-loaded via a namespace (and not attached):
-[1] compiler_4.6.1
-
-Read analysis_notes.txt for the explanation of every candidate model.

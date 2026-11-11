@@ -2,33 +2,31 @@
 \usepackage[margin=22mm,headheight=15pt]{geometry}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern,amsmath,amssymb,graphicx,booktabs,tabularx,array}
-\usepackage{xcolor,fancyhdr,listings,caption,hyperref}
-\definecolor{ink}{HTML}{17364A}
-\definecolor{accent}{HTML}{176B87}
-\definecolor{light}{HTML}{F2F5F7}
-\hypersetup{colorlinks=true,linkcolor=accent,urlcolor=accent,
-  pdftitle={Modelling Annual Average Daily Traffic},pdfauthor={}}
-\pagestyle{fancy}
-\fancyhf{}
-\fancyhead[L]{\small\textcolor{ink}{MH3510 \quad Regression Analysis}}
-\fancyhead[R]{\small AADT project}
-\fancyfoot[C]{\small\thepage}
-\renewcommand{\headrulewidth}{0.3pt}
+\usepackage{xcolor,listings,caption,hyperref,needspace,longtable}
+\hypersetup{hidelinks,
+  pdftitle={Modelling Average Annual Daily Traffic},pdfauthor={Eugene Ng}}
+\pagestyle{plain}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{6pt}
 \setlength{\emergencystretch}{2em}
 \renewcommand{\arraystretch}{1.2}
-\captionsetup{font=small,labelfont=bf}
+\captionsetup{font=small,labelfont=bf,hypcap=false}
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\bottomfraction}{0.8}
+\renewcommand{\textfraction}{0.1}
+\renewcommand{\floatpagefraction}{0.75}
+\setlength{\textfloatsep}{12pt plus 2pt minus 2pt}
+\setlength{\intextsep}{10pt plus 2pt minus 2pt}
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
 \newcommand{\fig}[3]{%
-  \begin{center}\begin{minipage}{\linewidth}\centering
+  \begin{figure}[!htbp]\centering
   \includegraphics[width=#2\linewidth]{assets/#1}
-  \captionof{figure}{#3}\end{minipage}\end{center}}
+  \caption{#3}\end{figure}}
 \lstdefinestyle{rcode}{language=R,basicstyle=\ttfamily\footnotesize,
-  keywordstyle=\color{accent},commentstyle=\color{gray},
-  stringstyle=\color{ink},breaklines=true,breakatwhitespace=false,
+  keywordstyle=\bfseries,commentstyle=\itshape,
+  stringstyle=\normalfont\ttfamily,breaklines=true,breakatwhitespace=false,
   columns=fullflexible,keepspaces=true,showstringspaces=false,
-  frame=single,rulecolor=\color{gray!30},backgroundcolor=\color{light},
+  frame=none,
   numbers=left,numberstyle=\tiny\color{gray},numbersep=7pt,
   xleftmargin=12pt,framexleftmargin=4pt,tabsize=2}
 \lstdefinestyle{console}{basicstyle=\ttfamily\scriptsize,
@@ -38,43 +36,19 @@
 \newcommand{\MatricNumber}{N22602219H}
 
 \begin{document}
-\hypersetup{pageanchor=false}
-\begin{titlepage}
-\vspace*{20mm}
-{\large\color{accent} MH3510 \quad REGRESSION ANALYSIS\par}
-\vspace{10mm}
-{\Huge\bfseries\color{ink} Modelling Annual\\[3mm] Average Daily Traffic\par}
-\vspace{6mm}
-{\Large Multiple linear regression with R\par}
-\vspace{18mm}
-\begin{tabular}{@{}ll}
-Name: & \AuthorName\\[6mm]
-Matriculation number: & \MatricNumber\\[6mm]
-Submission: & Individual project\\[3mm]
-Due date: & 11 November
-\end{tabular}
-\vfill
-{\large\bfseries Overview\par}
-This study models traffic volume for 121 road sections using county population,
-lane count, road width and access control. The initial model is checked using
-residual plots and revised through transformations. All 11 candidate models,
-including unsuccessful attempts, are retained.
+\begin{center}
+{\LARGE\bfseries Modelling Average Annual Daily Traffic\par}
+\vspace{7pt}
+{\normalsize \AuthorName\quad (\MatricNumber)\par}
+\vspace{3pt}
+{\small MH3510 Regression Analysis\par}
+\end{center}
+\vspace{3pt}
 
-A fifth-root response model with log population, log lane count and access control
-provides a defensible final specification. For the requested road, its
-back-transformed typical prediction is approximately \textbf{5,494 vehicles/day},
-with an approximate 95\% individual prediction interval of
-\textbf{1,164 to 17,928 vehicles/day}.
-\vspace{8mm}
-{\small The main report follows the five-stage modelling workflow.
-Appendices contain diagnostic evidence, the complete R script and its output.}
-\end{titlepage}
-\hypersetup{pageanchor=true}
-
-\section{Step 1: Data and graphical exploration}
+\section{Data and graphical exploration}
 Average annual daily traffic (AADT) is the average number of vehicles passing
 through a road section each day over a year. The analysis uses only the first
-five columns of \texttt{aadt.txt}; the steam dataset is not used.
+five columns of \texttt{aadt.txt}.
 \begin{center}
 \begin{tabularx}{\linewidth}{@{}clY@{}}
 \toprule Column & Symbol & Definition\\ \midrule
@@ -87,10 +61,27 @@ five columns of \texttt{aadt.txt}; the steam dataset is not used.
 \end{tabularx}
 \end{center}
 The original fifth column uses 1 for access control and 2 for no control.
-Set $A=1$ for original code 1 and $A=0$ otherwise. All 121 observations are complete:
-27 have access control and 94 do not. AADT ranges from 201 to 155,547.
+Set $A=1$ for original code 1 and $A=0$ otherwise. There are 121 road sections,
+with no missing values in the five selected columns. Of these, 27 have access
+control and 94 do not. AADT ranges from 201 to 155,547.
+Access control refers to restrictions on where vehicles may enter or leave a road.
 
 \fig{01_scatterplot_matrix.png}{0.69}{Scatterplot matrix of the response and four candidate predictors.}
+
+\begin{center}
+\begin{tabular}{@{}lr@{}}
+\toprule Predictor & Correlation with AADT\\ \midrule
+Population ($X_1$) & 0.620\\
+Number of lanes ($X_2$) & 0.764\\
+Road width ($X_3$) & 0.122\\
+\bottomrule
+\end{tabular}
+\captionof{table}{Pearson correlations between AADT and the quantitative predictors.}
+\end{center}
+
+Road width has the weakest marginal linear association with AADT
+($r\approx0.12$). These correlations describe each predictor separately and
+do not account for the other predictors.
 
 Traffic has positive marginal associations with population, lanes and access
 control, while width has a weaker association. Population and AADT are strongly
@@ -98,8 +89,7 @@ skewed. Lanes and access control are related: all two-lane sections lack access
 control, while sections with more than four lanes have access control. The
 regression estimates conditional associations, not causal effects.
 
-\clearpage
-\section{Step 2: Initial multiple linear regression}
+\section{Initial multiple linear regression}
 The starting model includes all four required predictors:
 \[
 Y_i=\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\beta_3X_{3i}+\beta_4 A_i+\varepsilon_i.
@@ -112,7 +102,7 @@ The initial model has $R^2=0.7527$, adjusted $R^2=0.7442$ and residual standard
 error $15{,}292.6$. Its overall $F$-test is significant
 ($F(4,116)=88.29$, $p<2.2\times10^{-16}$).
 
-\subsection*{Why this fit is insufficient}
+\subsection*{Problems with the initial model}
 The fitted relationship explains some variation, but statistical significance
 does not establish adequacy. The residual-versus-fitted plot shows curvature and
 increasing spread; the Q--Q plot has substantial tail departures. Moreover,
@@ -128,56 +118,72 @@ transform the response to address changing spread, and refit and check again
 \cite{chapter2}. The fitted coefficients and full console output are retained
 in Appendix~\ref{app:output}.
 
-\clearpage
-\section{Step 3: Transformations and the model record}
-The candidate sequence is exploratory. Logarithms compress high values strongly;
+\section{Transformations and model comparison}
+Several transformations were tried to address the patterns seen in the residual
+plots. Logarithms compress high values strongly;
 the square-root transformation compresses them less. Fourth and fifth roots are
 intermediate positive-power trials. A fifth root is simply $Y^{1/5}$; fitting it
 still uses ordinary \texttt{lm()} regression, linear in its coefficients.
 
-The predictor sets used below are
-$P_0=(X_1,X_2,X_3,A)$, $P_1=(\log X_1,X_2,X_3,A)$,
-and $P_2=(\log X_1,\log X_2,X_3,A)$.
-A reduced set omits width $X_3$. All logarithms are natural.
+The response and predictors for each model are listed below. Every model includes
+an intercept. The reduced models omit road width ($X_3$). All logarithms are natural.
 
-\begin{center}\small
-\begin{tabularx}{\linewidth}{@{}llY@{}}
-\toprule Model & Response; predictors & What improved or remained problematic\\ \midrule
-M1 & $Y$; $P_0$ & Baseline: curvature, increasing spread, tail problems and negative fitted values.\\
-M2 & $\log Y$; $P_0$ & Q--Q plot improves, but the residual trend curves downward at large fitted values.\\
-M3 & $\log Y$; $P_1$ & Population transformation helps; curvature, uneven spread and tail observations remain.\\
-M4 & $\log Y$; $P_2$ & Flatter mean trend, but residual spread decreases as fitted values increase.\\
-M5 & $\log Y$; $P_1$ plus $X_2^2$ & Quadratic lanes improve M3, but do not resolve the changing spread.\\
-M6 & $\log Y$; reduced $P_2$ & Width can be removed; the variance issue persists.\\
-M7 & $Y^{1/4}$; $P_2$ & Much more stable spread and straighter Q--Q plot. A reasonable candidate.\\
-M8 & $\sqrt{Y}$; $P_2$ & Some improvement, but curvature and increasing spread remain.\\
-M9 & $Y^{1/4}$; reduced $P_2$ & Reasonable simpler fourth-root alternative; width is not supported.\\
-M10 & $Y^{1/5}$; $P_2$ & Relatively flat residual trend, more stable spread and reasonable Q--Q plot.\\
-M11 & $Y^{1/5}$; reduced $P_2$ & Selected working model: M10 simplified without losing a supported predictor.\\
+\begingroup\small
+\begin{longtable}{@{}p{0.08\linewidth}p{0.16\linewidth}p{\dimexpr0.76\linewidth-4\tabcolsep\relax}@{}}
+\toprule Model & Response & Predictors\\ \midrule
+\endfirsthead
+\toprule Model & Response & Predictors\\ \midrule
+\endhead
+M1 & $Y$ & $X_1, X_2, X_3, A$\\
+M2 & $\log Y$ & $X_1, X_2, X_3, A$\\
+M3 & $\log Y$ & $\log X_1, X_2, X_3, A$\\
+M4 & $\log Y$ & $\log X_1, \log X_2, X_3, A$\\
+M5 & $\log Y$ & $\log X_1, X_2, X_2^2, X_3, A$\\
+M6 & $\log Y$ & $\log X_1, \log X_2, A$\\
+M7 & $Y^{1/4}$ & $\log X_1, \log X_2, X_3, A$\\
+M8 & $\sqrt{Y}$ & $\log X_1, \log X_2, X_3, A$\\
+M9 & $Y^{1/4}$ & $\log X_1, \log X_2, A$\\
+M10 & $Y^{1/5}$ & $\log X_1, \log X_2, X_3, A$\\
+M11 & $Y^{1/5}$ & $\log X_1, \log X_2, A$\\
 \bottomrule
-\end{tabularx}
-\captionof{table}{All candidate models are retained, including unsuccessful fits.}
-\end{center}
+\caption{Response and predictors for each candidate model.}\\
+\end{longtable}
+\endgroup
+
+\begingroup\small
+\begin{longtable}{@{}p{0.08\linewidth}p{\dimexpr0.92\linewidth-2\tabcolsep\relax}@{}}
+\toprule Model & What improved or remained problematic\\ \midrule
+\endfirsthead
+\toprule Model & What improved or remained problematic\\ \midrule
+\endhead
+M1 & Baseline: curvature, increasing spread, tail problems and negative fitted values.\\
+M2 & Q--Q plot improves, but the residual trend curves downward at large fitted values.\\
+M3 & Population transformation helps; curvature, uneven spread and tail observations remain.\\
+M4 & Flatter mean trend, but residual spread decreases as fitted values increase.\\
+M5 & Quadratic lanes improve M3, but do not resolve the changing spread.\\
+M6 & Width can be removed; the variance issue persists.\\
+M7 & Much more stable spread and straighter Q--Q plot. A reasonable candidate.\\
+M8 & Some improvement, but curvature and increasing spread remain.\\
+M9 & Reasonable simpler fourth-root alternative; width is not supported.\\
+M10 & Relatively flat residual trend, more stable spread and reasonable Q--Q plot.\\
+M11 & Selected working model: M10 simplified without losing a supported predictor.\\
+\bottomrule
+\caption{Diagnostic findings for the candidate models.}\\
+\end{longtable}
+\endgroup
 
 \subsection*{How the response power was chosen}
 The main diagnostic justification is that both root models correct the pronounced
-defects of the raw, log and square-root fits. M11 is a defensible working choice,
-not a uniquely proven optimum; M9 remains a reasonable alternative.
+defects of the raw, log and square-root fits. The fifth-root model M11 was selected
+because its residual plots showed a relatively flat trend and more stable spread.
+The fourth-root model M9 also gave satisfactory results.
 
-For transparency, earlier exploratory Box--Cox profiling suggested a power near
-0.18 and led to the nearby fifth-root trial. That extended work is archived.
-It is not required in the course-level script or used here as a substitute for
-the residual checks. The exact fifth root is an extension of the lecture's
-transformation principle, permitted by the assignment, rather than a transformation
-prescribed in the slides.
+We use $R^2$, adjusted $R^2$ and residual standard deviation as measures of model
+fit when comparing models on the same response scale. For models with different
+response transformations, we assess the residual plots instead of directly
+comparing these values. The $F$-tests also compare models on the same response scale.
 
-\textbf{Comparison rule.} $R^2$, adjusted $R^2$ and residual standard deviations
-refer to the fitted response scale. They should not be ranked across different
-response transformations as if the response were unchanged.
-An $F$-test also cannot compare different transformed responses.
-
-\clearpage
-\section{Step 4: Simplification and the final fitted model}
+\section{Simplification and the final fitted model}
 For nested models with the same response, the extra-sum-of-squares test is
 \[
 F=\frac{(\operatorname{SSE}_{R}-\operatorname{SSE}_{F})/(p_F-p_R)}
@@ -200,6 +206,8 @@ Add squared log predictors to M11 jointly & 0.736 & 0.481\\
 alongside their unsatisfactory residual diagnostics.}
 \end{center}
 
+For width, test $H_0:\beta_3=0$ against $H_1:\beta_3\ne0$ in M10.
+The statistic is $F(1,116)=0.6317$, with $p=0.4284$.
 At the 5\% level, there is insufficient evidence that width adds explanatory value
 to the fifth-root model after accounting for population, lanes and access control.
 The residual plot against the omitted width also shows no obvious remaining trend.
@@ -209,7 +217,10 @@ Let $Z=Y^{1/5}$. The selected model is
 \[
 Z_i=\beta_0+\beta_1\log X_{1i}+\beta_2\log X_{2i}+\beta_4 A_i+\varepsilon_i,
 \]
-with fitted conditional mean
+For the textbook tests and intervals, the working assumption is that the errors
+are independent $N(0,\sigma^2)$ on the fifth-root scale, with constant variance.
+These assumptions are assessed using the residual diagnostics below.
+The fitted conditional mean is
 \[
 \boxed{\widehat{Z}=-2.739015+0.535189\log X_1
           +2.317245\log X_2+1.106497A.}
@@ -232,11 +243,10 @@ $s=0.7478$ with 117 residual degrees of freedom.
 The overall test gives $F(3,117)=225.95$, $p<2.2\times10^{-16}$.
 All retained predictors have evidence of a nonzero conditional association.
 
-\clearpage
 \subsection*{Final residual checks and interpretation}
 \fig{M11_fifth_root_reduced_residuals.png}{1}{Final-model diagnostics. Residual spread
-is substantially improved, with a relatively flat fitted-value trend. Tail
-observations remain and must be discussed.}
+is substantially improved, with a relatively flat fitted-value trend. A few tail
+observations remain.}
 
 The residual cloud is substantially more satisfactory than M1's, and the Q--Q
 plot is reasonably straight apart from a few tail observations. The plots support
@@ -258,13 +268,13 @@ from 5,494 to 5,430, about 1.2\%; retained coefficient signs remain positive.
 However, no time or spatial ordering is documented, so it does not justify a
 serial-correlation conclusion. Independence remains an assumption; possible
 county clustering cannot be resolved from the supplied variable description.
-The influence and row-order plots are retained in Appendix~\ref{app:diagnostics}.
 
-\clearpage
-\section{Step 5: Prediction for the requested road}
+\Needspace{10\baselineskip}
+\section{Prediction for the requested road}
 The requested setting is population $50{,}000$, three lanes, width 60 feet and
 original control code 2. Since code 2 means no access control, use $A=0$.
-Width is recorded but does not enter the final reduced model.
+Although the requested road width is 60 feet, width is not used in the final
+prediction because it was removed during model simplification.
 
 \begin{lstlisting}[style=rcode,numbers=none]
 new_road <- data.frame(population = 50000, lanes = 3,
@@ -309,101 +319,46 @@ give a confidence interval for arithmetic mean AADT. The mean confidence
 interval is reported on its fitted scale, without claiming an original-scale
 mean interval or introducing advanced retransformation methods.
 
-No three-lane sections are observed, so the requested lane count interpolates
-between two and four lanes. The wide individual prediction interval reflects
+The assignment requests a prediction for a three-lane road. Although the dataset
+contains no three-lane sections, three lies between the observed lane counts of
+two and four, so the prediction involves interpolation with respect to lane count.
+The wide individual prediction interval reflects
 substantial road-to-road variation and relies on the model assumptions.
 
 \section{Conclusion and limitations}
 A transformed multiple regression addresses the strongest deficiencies of the
 initial model. M11 retains population, lanes and access control; width is omitted
 using the full/reduced $F$-test and residual checks. M9 is a reasonable alternative,
-giving a typical prediction near 5,728. The analysis is exploratory and uses the
-same dataset to select and assess the model. The reported textbook intervals
-are conditional on the selected specification and approximate error assumptions.
+giving a typical prediction near 5,728.
 
-\clearpage
-\section*{Reproducibility and references}
-The analysis uses base R and all 121 observations. From the project directory run:
-\begin{lstlisting}[style=rcode,numbers=none]
-Rscript analysis.R
-\end{lstlisting}
-This generates the complete output, model objects and plots in
-\texttt{coursework\_results/}. The supplied LaTeX source package includes the
-script, dataset, console output and plot assets. To compile the report from
-that package's directory:
-\begin{lstlisting}[style=console]
-tectonic aadt_report.tex
-\end{lstlisting}
-
-Appendix~\ref{app:diagnostics} preserves the remaining diagnostic figures.
-Appendix~\ref{app:code} contains the full executable R code, and
-Appendix~\ref{app:output} reproduces the console output. Formula environment
-memory addresses in that output are R implementation details, not statistical
-results. Confidence regions and Bonferroni limits are omitted as instructed.
-
-The archived extended exploration is not necessary to reproduce the main
-course-level analysis. No observations or unsuccessful candidate models have
-been removed to improve the reported fit.
-
+\begin{minipage}{\linewidth}
 \begin{thebibliography}{9}
 \bibitem{tutorial} MH3510 course material.
 \emph{Modeling linear regression model with R}, Sections 2--7.
 Practical workflow, model checking, reduced-model tests and prediction.
 \bibitem{chapter2} MH3510 course material.
 \emph{Chapter 2: Simple linear regression}, Part 4, printed slides 48--59 and 64.
-Local file: \texttt{MH3510\_Chapter2 (1).pdf}.
 \bibitem{chapter4i} MH3510 course material.
 \emph{Chapter 4: Multiple linear regression, testing and prediction}, Part I.
-Local file: \texttt{MH3510\_Chapter4\_Part1.pdf}.
 \bibitem{chapter4ii} MH3510 course material.
 \emph{Chapter four: Multiple linear regression (Part II)}, PDF pages 12--31
-and 35--36. Local file: \texttt{MH3510\_CH4part2(ppt).pdf}.
-\bibitem{data} Course project dataset, \texttt{aadt.txt}, and assignment instructions.
-Only the first five columns are used.
+and 35--36.
+\bibitem{chapter7} MH3510 course material.
+\emph{Chapter 7: A universal approach to linear modelling}, Section 2, pages 1--2.
+Dummy-variable coding for categorical predictors.
 \end{thebibliography}
+\end{minipage}
 
-\clearpage
+\bigskip
 \appendix
-\section{Remaining candidate diagnostics}\label{app:diagnostics}
-M1 and M11 appear in the main report. The following figures preserve all other
-candidate fits. Model specifications and decisions are listed in Section 3.
-\fig{M2_log_y_residuals.png}{0.85}{M2: log response with untransformed predictors.
-Improved Q--Q plot, but a curved residual trend remains.}
-\fig{M3_log_y_log_population_residuals.png}{0.85}{M3: log response and log population.
-Curvature and changing spread still motivate revision.}
-\clearpage
-\fig{M4_log_y_log_population_lanes_residuals.png}{0.98}{M4: log response, log population
-and log lanes. The spread still differs across fitted levels.}
-\fig{M5_log_y_quadratic_lanes_residuals.png}{0.98}{M5: a quadratic lane term improves
-the log model's mean specification but does not fully resolve uneven spread.}
-\clearpage
-\fig{M6_log_y_reduced_residuals.png}{0.98}{M6: dropping width simplifies the log model
-but does not repair its variance issue.}
-\fig{M7_fourth_root_full_residuals.png}{0.98}{M7: the full fourth-root model is a
-reasonable transformed candidate with substantially improved diagnostics.}
-\clearpage
-\fig{M8_square_root_full_residuals.png}{0.98}{M8: the square-root response model
-retains curvature and increasing residual spread.}
-\fig{M9_fourth_root_reduced_residuals.png}{0.98}{M9: the reduced fourth-root model
-remains a reasonable alternative to the final specification.}
-\clearpage
-\fig{M10_fifth_root_full_residuals.png}{1}{M10: the full fifth-root model.
-The reduced model M11 omits width after the nested comparison.}
-\fig{02_final_influence_and_order.png}{1}{Final-model Cook's distance and residuals
-in file order. File order is not established to represent time.}
-\clearpage
-\fig{03_final_transformed_scatterplots.png}{0.9}{Transformed response and predictors.
-Width remains displayed to assess the omitted variable.}
-
-\clearpage
 \section{Complete R code}\label{app:code}
 The code below is the executable \texttt{analysis.R}. Helper functions only format
 output and save figures. Model fitting and inference use base R.
 \lstinputlisting[style=rcode]{analysis.R}
 
-\clearpage
+\Needspace{6\baselineskip}
 \section{Complete R console output}\label{app:output}
-The following is the complete output from the course-level analysis. The model
-summaries, nested tests, sensitivity results and predictions are included.
+The output below includes the model summaries, nested tests, sensitivity
+results and predictions.
 \lstinputlisting[style=console]{R_output.txt}
 \end{document}

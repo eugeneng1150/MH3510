@@ -4,7 +4,8 @@ MH3510 AADT PROJECT: ANALYSIS DECISIONS AND LECTURE ALIGNMENT
 Read this alongside analysis.R and coursework_results/R_output.txt.
 Run from the project directory with: Rscript analysis.R
 The script needs only base R. All 121 observations and all 11 candidate models
-are retained. These are analysis notes, not yet a formatted submission report.
+are retained. The formatted submission report is output/pdf/N2602219H_Report.pdf;
+these notes provide supporting detail.
 
 1. WHAT THE LECTURES SUPPORT
 
@@ -23,9 +24,14 @@ Relevant local references:
   pages 35-36: polynomial regression and keeping lower-order terms.
 - Modeling linear regression model with R.pdf, Sections 2-7: the practical R
   sequence, residual plots, F-tests, and predict(). The steam data are illustrative.
+- ch7.pdf, Section 2, pages 1-2: represent a categorical predictor with k levels
+  using k-1 dummy variables when an intercept is included. Access control has
+  two categories, so one indicator is sufficient; no access control is the reference.
 
 Chapters 1 and 3 provide context and matrix foundations. Chapters 5 and 6 concern
 one-way/two-way ANOVA and do not require replacing this regression workflow.
+Chapter 7 supports the existing mixture of quantitative predictors and the
+access-control indicator; it does not require a separate ANOVA analysis here.
 
 Changes after reviewing the slides:
 - The MAIN analysis now relies on lm(), summary(), residual/Q-Q plots, anova(),

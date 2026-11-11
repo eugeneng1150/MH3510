@@ -28,7 +28,9 @@ Before recompiling after an analysis change, copy:
 Narrative tables and equations in the report are written explicitly. If the
 data or model specification changes, review and update their values as well.
 
-The current report retains all 11 candidate models. The raw/log/square-root
+The report summarises all 11 candidate models and shows the initial and final
+residual plots. Additional diagnostic figures remain in assets/. Session
+information is omitted from the report and console output. The raw/log/square-root
 failures and fourth-root alternative are documented. Only base-R, course-level
 methods are needed to run the main analysis. Earlier extended exploration
 remains in the original project's archive/extended_analysis/ directory.

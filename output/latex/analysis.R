@@ -191,9 +191,6 @@ run_analysis <- function() {
           pch = 19, cex = 0.6, col = adjustcolor("#176b87", 0.55),
           main = "Transformed response and predictors (natural logarithms)")
   }, 1400, 1400)
-  section("SESSION INFORMATION")
-  print(sessionInfo())
-  cat("\nRead analysis_notes.txt for the explanation of every candidate model.\n")
 }
 
 run_analysis()
